@@ -1,0 +1,25 @@
+# Forzar la codificación UTF-8 en los encabezados Content-Type
+# para los tipos de archivo de texto más comunes.
+# Esto soluciona la advertencia de compatibilidad del navegador.
+
+# Usa UTF-8 como codificación por defecto.
+AddDefaultCharset UTF-8
+
+# Y sé explícito para los tipos de archivo clave para máxima compatibilidad.
+<IfModule mod_mime.c>
+    AddType 'text/css; charset=UTF-8' .css
+    AddType 'text/javascript; charset=UTF-8' .js
+</IfModule>
+
+# Configuración de encabezados de seguridad y caché modernos.
+<IfModule mod_headers.c>
+    # Reemplaza el antiguo 'X-Frame-Options' con la directiva moderna.
+    # Esto previene que tu sitio sea incrustado en iframes maliciosos (clickjacking).
+    Header set Content-Security-Policy "frame-ancestors 'self'"
+
+    # Usa 'Cache-Control' en lugar de 'Expires' para tus assets.
+    # Cachea CSS, JS e imágenes por 1 año.
+    <FilesMatch "\.(ico|jpg|jpeg|png|gif|js|css|swf|woff2)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+</IfModule>
