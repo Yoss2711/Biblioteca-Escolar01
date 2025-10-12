@@ -23,7 +23,11 @@ $nav_items = [
                     <li><a href="#<?php echo $id; ?>"><?php echo $text; ?></a></li>
                 <?php endforeach; ?>
             </ul>
-            <a href="#" class="btn-login">Ingresar</a>
+            <!-- 
+                Este botón ahora apunta directamente al dashboard.
+                Se construye la URL subiendo un nivel desde la BASE_URL (que está en /public) para luego entrar a /src.
+            -->
+            <a href="<?php echo defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/../src/pages/dashboard/index.php' : '#'; ?>" class="btn-login">Ingresar</a>
             <button class="menu-toggle" aria-label="Abrir menú">☰</button>
         </nav>
     </div>

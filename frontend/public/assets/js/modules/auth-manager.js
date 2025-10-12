@@ -27,20 +27,25 @@ export class AuthManager {
             const button = form.querySelector('button[type="submit"]');
             this.showLoading(button);
 
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+            try {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-            this.hideLoading(button);
-
-            if (error) {
-                this.showMessage('Email o contraseña incorrectos', 'error');
-                console.error(error.message);
-            } else {
-                this.currentUser = data.user;
-                this.showMessage('¡Inicio de sesión exitoso!', 'success');
-                window.location.href = "home.php"; // 🔥 redirección
+                if (error) {
+                    this.showMessage('Email o contraseña incorrectos', 'error');
+                    console.error(error.message);
+                } else {
+                    this.currentUser = data.user;
+                    this.showMessage('¡Inicio de sesión exitoso!', 'success');
+                    window.location.href = "../../src/pages/dashboard/index.html"; // 🔥 Redirección al dashboard
+                }
+            } catch (e) {
+                this.showMessage('Ocurrió un error inesperado. Inténtalo de nuevo.', 'error');
+                console.error('Login error:', e);
+            } finally {
+                this.hideLoading(button);
             }
         });
     }
@@ -55,26 +60,31 @@ export class AuthManager {
             const button = form.querySelector('button[type="submit"]');
             this.showLoading(button);
 
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const type = document.getElementById('userType').value;
+            try {
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const type = document.getElementById('userType').value;
 
-            const { data, error } = await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: { data: { name, type } }
-            });
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { name, type } }
+                });
 
-            this.hideLoading(button);
-
-            if (error) {
-                this.showMessage(error.message, 'error');
-            } else {
-                this.currentUser = data.user;
-                this.showMessage('¡Cuenta creada exitosamente! Ahora inicia sesión', 'success');
-                this.switchTab('login');  
-                form.reset();
+                if (error) {
+                    this.showMessage(error.message, 'error');
+                } else {
+                    this.currentUser = data.user;
+                    this.showMessage('¡Cuenta creada exitosamente! Ahora inicia sesión', 'success');
+                    this.switchTab('login');
+                    form.reset();
+                }
+            } catch (e) {
+                this.showMessage('Ocurrió un error inesperado durante el registro.', 'error');
+                console.error('Sign up error:', e);
+            } finally {
+                this.hideLoading(button);
             }
         });
     }
@@ -87,32 +97,22 @@ export class AuthManager {
         logoutBtn.addEventListener('click', async () => {
             await supabaseClient.auth.signOut();
             this.currentUser = null;
-
-            document.getElementById('loginFormElement').reset();
-            document.getElementById('registerFormElement').reset();
-
-            document.querySelector('.form-tabs').style.display = 'flex';
-            this.userInfo.style.display = 'none';
-
-            this.forms.forEach(f => f.classList.remove('active'));
-            this.tabs.forEach(t => t.classList.remove('active'));
-
-            this.switchTab('login');
+            this.resetUI();
             this.showMessage('Sesión cerrada correctamente', 'success');
         });
     }
 
     // -------- SESIÓN EXISTENTE --------
     async checkExistingSession() {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session) {
-            // Si estamos en la página de login/index, cerramos sesión automáticamente
-            await supabaseClient.auth.signOut();
-            this.currentUser = null;
-            this.forms.forEach(f => f.classList.remove('active'));
-            this.tabs.forEach(t => t.classList.remove('active'));
-            this.switchTab('login');
-            this.userInfo.style.display = 'none';
+        try {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            // Si hay una sesión activa y estamos en la página de login, redirigir a home.
+            if (session && (window.location.pathname.endsWith('index.php') || window.location.pathname.endsWith('/'))) {
+                console.log('Existing session found. Redirecting to home.');
+                window.location.href = "home.php";
+            }
+        } catch (e) {
+            console.error('Error checking existing session:', e);
         }
     }
 
@@ -167,5 +167,17 @@ export class AuthManager {
         this.tabs.forEach(t => t.classList.remove('active'));
 
         this.userInfo.style.display = 'block';
+    }
+
+    resetUI() {
+        // Resetea los formularios
+        document.getElementById('loginFormElement')?.reset();
+        document.getElementById('registerFormElement')?.reset();
+
+        // Muestra las pestañas de login/registro y oculta la info de usuario
+        document.querySelector('.form-tabs').style.display = 'flex';
+        if (this.userInfo) this.userInfo.style.display = 'none';
+
+        this.switchTab('login');
     }
 }
