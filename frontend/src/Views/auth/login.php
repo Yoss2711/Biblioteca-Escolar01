@@ -16,8 +16,8 @@
         <?php include '../../../components/auth/login-form.php'; ?>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../public/assets/js/auth.js"></script>
+    
+    <script src="../../../public/assets/js/login/auth.js" type="module"></script>
 </body>
 
 </html>

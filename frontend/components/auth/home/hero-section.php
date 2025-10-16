@@ -18,3 +18,4 @@
     <!-- Elementos para la animación de burbujas -->
     <?php for ($i = 0; $i < 7; $i++) echo '<div class="bubble"></div>'; ?>
 </section>
+<!-- DEBUG: hero-section.php OK -->

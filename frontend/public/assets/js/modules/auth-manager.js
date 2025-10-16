@@ -39,6 +39,14 @@ export class AuthManager {
                 } else {
                     this.currentUser = data.user;
                     this.showMessage('¡Inicio de sesión exitoso!', 'success');
+
+                    // --- INICIO: Guardar datos en sessionStorage ---
+                    sessionStorage.setItem('authToken', data.session.access_token);
+                    sessionStorage.setItem('userId', data.user.id);
+                    sessionStorage.setItem('userName', data.user.user_metadata.name);
+                    sessionStorage.setItem('userEmail', data.user.email);
+                    // --- FIN: Guardar datos en sessionStorage ---
+
                     window.location.href = "../../src/pages/dashboard/index.html"; // 🔥 Redirección al dashboard
                 }
             } catch (e) {

@@ -23,11 +23,33 @@ $nav_items = [
                     <li><a href="#<?php echo $id; ?>"><?php echo $text; ?></a></li>
                 <?php endforeach; ?>
             </ul>
-            <!-- 
-                Este botón ahora apunta directamente al dashboard.
-                Se construye la URL subiendo un nivel desde la BASE_URL (que está en /public) para luego entrar a /src.
-            -->
-            <a href="<?php echo defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/../src/pages/dashboard/index.php' : '#'; ?>" class="btn-login">Ingresar</a>
+            
+            <!-- Botón Ingresar (sin cambios) -->
+            <a href="<?php echo rtrim(BASE_URL, '/') . '/../src/pages/dashboard/index.php'; ?>" 
+               id="loginBtn" 
+               class="btn-login">
+                Ingresar
+            </a>
+
+            <!-- Menú de perfil (solo cuando está logueado) -->
+            <div id="profileMenu" class="profile-menu" style="display: none;">
+                <button id="profileBtn" class="profile-btn">
+                    <span class="profile-avatar" id="profileAvatar">JT</span>
+                </button>
+                
+                <div class="profile-dropdown">
+                    <div class="profile-header">
+                        <p id="userName">Usuario</p>
+                        <small id="userEmail">correo@escuela.edu</small>
+                    </div>
+                    <hr>
+                    <a href="#" class="dropdown-item">Mi perfil</a>
+                    <a href="#" class="dropdown-item">Mi cuenta</a>
+                    <hr>
+                    <button id="logoutBtn" class="dropdown-item logout-btn">Cerrar sesión</button>
+                </div>
+            </div>
+            
             <button class="menu-toggle" aria-label="Abrir menú">☰</button>
         </nav>
     </div>

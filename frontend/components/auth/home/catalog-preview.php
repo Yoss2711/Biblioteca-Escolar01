@@ -31,3 +31,4 @@
 
     </div>
 </section>
+<!-- DEBUG: catalog-preview.php OK -->

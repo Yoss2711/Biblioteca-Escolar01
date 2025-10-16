@@ -27,6 +27,7 @@ $pageDescription = "Descubre un mundo infinito de conocimiento";
 
     <?php include ROOT_PATH . '/components/auth/home/footer.php'; ?>
 
-    <script src="<?php echo BASE_URL; ?>assets/js/home/main.js"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/home/session.js?v=<?php echo filemtime(ROOT_PATH . '/public/assets/js/home/session.js'); ?>" type="module"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/home/main.js?v=<?php echo filemtime(ROOT_PATH . '/public/assets/js/home/main.js'); ?>" type="module"></script>
 </body>
 </html>

@@ -24,8 +24,7 @@ define('BASE_URL', '/Biblioteca-escolar01/frontend/public/');
         <?php include ROOT_PATH . '/components/auth/login/user-info.php'; ?>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script type="module" src="<?php echo BASE_URL; ?>assets/js/login/auth.js"></script>
+    <script type="module" src="<?php echo BASE_URL; ?>assets/js/login/auth.js?v=<?php echo filemtime(ROOT_PATH . '/public/assets/js/login/auth.js'); ?>"></script>
 
 </body>
 
